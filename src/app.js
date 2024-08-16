@@ -1,6 +1,6 @@
 import express from "express";
 import conectaNaDatabase from "./config/dbConnect.js";
-import livro from "./models/Livro.js";
+import routes from "./routes/index.js";
 
 /*--------------CONEXÃ COM MONGODB--------------*/
 const conexao = await conectaNaDatabase();
@@ -14,33 +14,9 @@ conexao.on("error", (erro) => {
 conexao.once("open", () => {
     console.log("Conexão com o banco feito com sucesso");
 });
-/*--------------CONEXÃ COM MONGODB--------------*/
-
 
 const app = express();
-app.use(express.json()); // Middleware: São utilizados para ter acesso à requisições e respostas, e fazer algumas ações como modificar os objetos, informações extras e etc.
-
-
-/*---------------------CRUD---------------------*/
-// Passando para o express a responsabilidade por gerencias as rota
-app.get("/", (req, res) => {
-    res.status(200).send("Curso de NodeJS");
-});
-
-// Pegar todos os livros
-app.get("/livros", async (req, res) => {
-    const listaLivros = await livro.find({});
-    res.status(200).json(listaLivros);
-});
-
-// Pegar um livro específico
-app.get("/livros/:id", async (req, res) => {
-    const listaLivros = await livro.find({id})
-    // No caso este get vai pegar a requisição de qual id de livro o usuário quer ver, vai colocar este id para ser comparado pela função buscaLivros
-    // este valor vai ficar saldo na variável index. Com isso este get vai retornar que foi um sucesso com o status(200) no formato Json(usando o valor da variável index 
-    // como parâmetro de qual id de livro buscar)
-    res.status(200).json(listaLivros);
-});
+routes(app);
 
 app.post("/livros", (req, res) => {
     // req. alguma coisa, é um objeto requisição que está sendo recebido dentro da função que é chamado em app.post
