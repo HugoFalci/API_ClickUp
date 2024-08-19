@@ -15,6 +15,20 @@ class LivroController {
         };
     };
 
+    static async listarLivroPorID(req, res) {
+        try {
+            const id = req.params.id;
+            const livroEncontrato = await livro.findById(id);
+            res
+                .status(200)
+                .json(livroEncontrato);
+        } catch (erro) {
+            res
+                .status(500)
+                .json({ message: `${erro.message} - Falha na requisição do livro` });
+        };
+    };
+
     static async cadastrarLivro(req, res) {
         try {
             const novoLivro = await livro.create(req.body);
@@ -26,6 +40,20 @@ class LivroController {
                 .status(500)
                 .json({ message: `${erro.message} - Falha ao cadastrar livro` });
         }
+    };
+
+        static async atualizarLivro(req, res) {
+        try {
+            const id = req.params.id;
+            await livro.findByIdAndUpdate(id, req.body);
+            res
+                .status(200)
+                .json(livroEncontrato);
+        } catch (erro) {
+            res
+                .status(500)
+                .json({ message: `${erro.message} - Falha na requisição do livro` });
+        };
     };
 };
 
